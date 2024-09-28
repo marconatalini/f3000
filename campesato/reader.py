@@ -42,7 +42,7 @@ class CampesatoReader(ReaderInterface):
 
     def __init__(self, file_path: str) -> None:
         super().__init__(file_path)
-        reader = PdfReader(file_path)
+        reader = PdfReader(f'{file_path}.pdf')
         number_of_pages = len(reader.pages)
         pages_to_import = self.get_number_pages(number_of_pages)
         self.text = ''
@@ -69,7 +69,11 @@ class CampesatoReader(ReaderInterface):
         # Finitura Alluminio                                  RAL 9010 GOFF. OPACO RIV.ALL.
         descrizione_colore = re.search(r"^Finitura Alluminio +(?P<colore>.+)$", self.text, re.MULTILINE).group('colore').strip()            
         return get_codice_colore(descrizione_colore)
-    
+
+    @property
+    def commento(self) -> str:
+        return ''
+        
     @property
     def system(self) -> str:
         # Tipo Alluminio:                                     UNIPLANAR 81 R

@@ -1,24 +1,21 @@
 from dataclasses import dataclass
+import os
 from reader_interface import ReaderInterface
 from serramento import Serramento
 
 class Ordine:
     versione: int = 1
-    cliente: int
-    riferimento: str = ''
-    commento: str = ''
-    serramenti: list[Serramento] = []
 
     def __init__(self, file_parser: ReaderInterface) -> None:
-        self.cliente = file_parser.cliente
-        self.riferimento = file_parser.riferimento
-        self.commento = file_parser.commento
-        self.serramenti = file_parser.serramenti
+        self.cliente: int = file_parser.cliente
+        self.riferimento: str = file_parser.riferimento
+        self.commento: str = file_parser.commento
+        self.serramenti: list[Serramento] = file_parser.serramenti
 
     def save_to_file(self, file_out: str = ''):
-        f = open(file_out,'w')
+        f = open(file_out,'w', newline='\r\n')
         numero_ordine = input("Numero ordine ? ")
-        f.write(';\n'.join('%s' % i for i in (self.versione, self.cliente, self.riferimento, numero_ordine, self.commento,'')))
+        f.write(f';\n'.join('%s' % i for i in (self.versione, self.cliente, self.riferimento, numero_ordine, self.commento,'')))
                 
         id_pos = 1
         for serramento in self.serramenti: 

@@ -21,7 +21,8 @@ class Serramento:
         '''
         extra = []  
         
-        extra.append('\n')
+        if len(extra):
+            extra.append('\n')
         return '\n'.join(extra)
     
     def f3000_txt(self, idx_pos: int = 1) -> str:

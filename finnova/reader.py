@@ -45,6 +45,8 @@ class FinnovaSerramento(Serramento):
     def get_misure_serramento(self, type: int) -> tuple[int,int]:
         larghezza, altezza = 0,0
         match = re.search(r"(?P<larghezza>\d{3,4})x *(?P<altezza>\d{3,4})", self.text, re.MULTILINE)
+        # print(self.offset.sx , int(match.group('larghezza')) , self.offset.dx)
+        # print(self.offset.sup , int(match.group('altezza')) , self.offset.inf)
         larghezza = self.offset.sx + int(match.group('larghezza')) + self.offset.dx
         altezza = self.offset.sup + int(match.group('altezza')) + self.offset.inf
     
@@ -55,6 +57,10 @@ class FinnovaSerramento(Serramento):
             larghezza = self.offset.sx + int(match.group('larghezza')) * n_ante + self.offset.dx + sormonto_ch * (n_ante -1) + 4
             altezza = self.offset.sup + int(match.group('altezza')) + self.offset.inf + 4 + 66 * (is_porta)
             return (larghezza, altezza)
+        
+        if type == 90 and not self.is_minima: #FIX
+            larghezza += 30
+            altezza += 30
         
         return (larghezza, altezza)
             
@@ -73,7 +79,7 @@ class FinnovaReader(ReaderInterface):
 
     def __init__(self, file_path: str) -> None:
         super().__init__(file_path)
-        reader = PdfReader(file_path)
+        reader = PdfReader(f'{file_path}.pdf')
         number_of_pages = len(reader.pages)
         pages_to_import = self.get_number_pages(number_of_pages)
         self.text = ''
