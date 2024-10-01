@@ -67,8 +67,11 @@ class GoitreReader(ReaderInterface):
     def serramenti(self) -> list[Serramento]:
         serramenti = []
         for rx in range(10, self.sheet.nrows):
-            if self.sheet.cell_value(rx, 0) == 'TOT ':
+            first_value = self.sheet.cell_value(rx, 0)
+            if type(first_value) == str and first_value.strip() == 'TOT':
                 break
+            if first_value == '':
+                continue
             pezzi, larghezza, altezza, descrizione = self.sheet.row_values(rx)
             s = GoitreSerramento(pezzi, larghezza, altezza)
             s.type = s.get_type(descrizione)
