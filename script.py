@@ -4,6 +4,7 @@ from goitre import GoitreReader
 from finnova import FinnovaReader
 from campesato import CampesatoReader
 from bminfissi import BMinfissiReader
+from carretta import CarrettaReader
 
 BASE_PATH = '/Users/marco/Downloads/lavoro'
 
@@ -13,6 +14,7 @@ print(
 2 - campesato
 3 - goitre
 4 - bm infissi
+5 - carretta
 """
 )
 choice = input('Quale reader vuoi usare?: ')
@@ -28,6 +30,8 @@ match choice:
         reader = GoitreReader(filepath_ordine)
     case '4':
         reader = BMinfissiReader(filepath_ordine, debug=True)
+    case '5':
+        reader = CarrettaReader(filepath_ordine, debug=True)
 
 ordine = Ordine(reader)
 

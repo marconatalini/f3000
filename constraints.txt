@@ -1,0 +1,4 @@
+# requirements.txt
+
+pypdf==4.3.1
+xlrd==2.0.1

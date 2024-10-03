@@ -14,7 +14,7 @@ class ReaderInterface(ABC):
     "A",[N.ProfiloCSM],[Lunghezza],[Qt�]
     '''
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, file_path: str, debug: bool = False) -> None:
         super().__init__()
 
     @property
@@ -30,7 +30,7 @@ class ReaderInterface(ABC):
 
     @property
     def commento(self) -> str:
-        return f'Ordine importato con {self.__class__}'
+        return f'Ordine importato'
 
     
     @property
