@@ -1,0 +1,5 @@
+tab_tecnica:codices
+EVO 2.8 da 93 type 90:153
+EVO 2.8 da 93 type 100:153
+EVO 2.8 da 93 type 901:221
+EVO 2.8 da 93 type 200:153

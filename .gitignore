@@ -1,8 +1,8 @@
 *.pdf
-*.txt
 *.zip
 .DS_Store
 .venv/
 __pycache__/
 f3_source/
+/*.txt
 !constraints.txt

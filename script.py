@@ -25,13 +25,13 @@ match choice:
     case '1':
         reader = FinnovaReader(filepath_ordine)
     case '2':
-        reader = CampesatoReader(filepath_ordine)
+        reader = CampesatoReader(filepath_ordine, debug = True)
     case '3':
         reader = GoitreReader(filepath_ordine)
     case '4':
-        reader = BMinfissiReader(filepath_ordine, debug=True)
+        reader = BMinfissiReader(filepath_ordine, debug = True)
     case '5':
-        reader = CarrettaReader(filepath_ordine, debug=True)
+        reader = CarrettaReader(filepath_ordine, debug = True)
 
 ordine = Ordine(reader)
 

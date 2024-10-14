@@ -23,7 +23,7 @@ class CampesatoSerramento(Serramento):
     def parse_info(self) -> None:
         ...
 
-    def get_type(self, codice: str, descrizione: str, last_type: int) -> int:
+    def get_type(self, codice: str, descrizione: str) -> int:
         print(f'Cerco codice Type per {descrizione}...', end='')
         codice = get_type_by_codice(codice)
         print(f'trovato {codice}')
@@ -31,23 +31,32 @@ class CampesatoSerramento(Serramento):
             self.rif_pos = 'MODIFICARE!'
         return codice
                 
-    def get_tabella_tecnica(self, system: str) -> int:
+    def get_tabella_tecnica(self, system: str, type: int) -> int:
+        tab_tec = 500
         match (system):
             case 'UNIPLANAR 81 R':
-                return 500
+                tab_tec = 500
             case 'REFLEX T':
-                return 499
+                tab_tec = 499
+        match (type):
+            case 801: #bilico
+                tab_tec = 402
+            case 901,912:
+                tab_tec = 231
+        return tab_tec
 
 class CampesatoReader(ReaderInterface):
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, file_path: str, debug: bool = False) -> None:
         super().__init__(file_path)
         reader = PdfReader(f'{file_path}.pdf')
         number_of_pages = len(reader.pages)
         pages_to_import = self.get_number_pages(number_of_pages)
         self.text = ''
-        for page in reader.pages[0:pages_to_import]:
-            self.text += page.extract_text(extraction_mode='layout')
+        for page in reader.pages[0:pages_to_import+1]:
+            self.text += page.extract_text(extraction_mode='plain')
+        if debug:
+            self.get_all_text()
 
     def get_number_pages(self, total_pages: int) -> int:
         number_pages_to_import = ''
@@ -76,17 +85,18 @@ class CampesatoReader(ReaderInterface):
         
     @property
     def system(self) -> str:
-        # Tipo Alluminio:                                     UNIPLANAR 81 R
-        return re.search(r"^Tipo Alluminio: +(?P<system>.+)$", self.text, re.MULTILINE).group('system')
+        # Tipo Alluminio: UNIPLANAR 81 R 
+        return re.search(r"^Tipo Alluminio:\s+(?P<system>.+)\s+$", self.text, re.MULTILINE).group('system')
     
     @property
     def cliente(self) -> int:
         return 542
     
     def lista_text_posizioni(self) -> list[dict]:
+        # 1 LGFFNSTD0.1N FISSO FIN. L/A UNIPLANAR 81R 000251 880 x 1540 NR 1 1
         # 7               LGFFNSTD0.1N                                                   FISSO FIN. L/A UNIPLANAR 81R                                                                                                                                              000245                                   2310 x 1705                               NR                             1          1
         idx_testo = []
-        for match in re.finditer(r"^\d{1,2} +(?P<codice>\S+)  +(?P<descrizione>.+)  +(?P<variante>\d{6})  +(?P<base>\d{2,4}) x (?P<altezza>\d{2,4})  +NR  +(?P<pezzi>\d{1,2})  +(?P<rif_pos>\d{1,2})$", self.text, re.MULTILINE):
+        for match in re.finditer(r"^\d{1,2} +(?P<codice>\S+)\s+(?P<descrizione>.+)\s(?P<variante>\d{6})\s+(?P<base>\d{2,4}) x (?P<altezza>\d{2,4})\s+NR\s+(?P<pezzi>\d{1,2})\s+(?P<rif_pos>\d{1,2})\s*$", self.text, re.MULTILINE):
             idx_testo.append({'start': match.start(),
                               'codice':match.group('codice'), 
                               'descrizione':match.group('descrizione'), 
@@ -99,23 +109,23 @@ class CampesatoReader(ReaderInterface):
         idx_testo.append({'start': len(self.text),'pos':None, 'pezzi':None})
 
         print("Trovato {} posizioni".format(len(idx_testo)-1))
+        print(idx_testo)
         return idx_testo
         
     @property
     def serramenti(self) -> list[Serramento]:
         posizioni = self.lista_text_posizioni()
         serramenti = []
-        last_type = 90 #fix
 
         for i in range(len(posizioni)-1):
             pos_text = self.text[posizioni[i]['start'] : posizioni[i+1]['start']]
             serramento = CampesatoSerramento(pos_text)
             serramento.rif_pos = posizioni[i]['rif_pos']
             serramento.pezzi = posizioni[i]['pezzi']
-            last_type = serramento.type = serramento.get_type(posizioni[i]['codice'], posizioni[i]['descrizione'], last_type)
+            serramento.type = serramento.get_type(posizioni[i]['codice'], posizioni[i]['descrizione'])
             serramento.larghezza = posizioni[i]['base']
             serramento.altezza = posizioni[i]['altezza']
-            serramento.tabella_tecnica = serramento.get_tabella_tecnica(self.system)
+            serramento.tabella_tecnica = serramento.get_tabella_tecnica(self.system, serramento.type)
             serramento.colore = self.colore
             serramenti.append(serramento)
         

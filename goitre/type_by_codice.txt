@@ -1,0 +1,9 @@
+codice:type
+F1 :100
+PF1  vetro unico:130
+PF2  vetro unico:230
+F2 :200
+:999
+PF2 vetro unico :230
+F2:200
+F1:100
