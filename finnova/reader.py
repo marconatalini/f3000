@@ -77,7 +77,7 @@ class FinnovaSerramento(Serramento):
 
 class FinnovaReader(ReaderInterface):
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, file_path: str, debug: bool = False) -> None:
         super().__init__(file_path)
         reader = PdfReader(f'{file_path}.pdf')
         number_of_pages = len(reader.pages)
@@ -85,6 +85,8 @@ class FinnovaReader(ReaderInterface):
         self.text = ''
         for page in reader.pages[0:pages_to_import]:
             self.text += page.extract_text(extraction_mode='layout')
+        if debug:
+            self.get_all_text()
 
     def get_number_pages(self, total_pages: int) -> int:
         number_pages_to_import = ''
@@ -102,7 +104,10 @@ class FinnovaReader(ReaderInterface):
             
     @property
     def colore(self) -> str:
-        descrizione_colore = re.search(r"Finitura: *ALLUMINIO (?P<colore>.{20,40}) ", self.text).group('colore').strip()            
+        try:
+            descrizione_colore = re.search(r"Finitura: *ALLUMINIO (?P<colore>.{20,40}) ", self.text).group('colore').strip()            
+        except AttributeError:
+            descrizione_colore = input("Non ho trovato il colore, scrivilo tu: ")
         return get_codice_colore(descrizione_colore)
     
     def system(self) -> str:
@@ -119,8 +124,10 @@ class FinnovaReader(ReaderInterface):
         return cliente
     
     def lista_text_posizioni(self) -> list[dict]:
+        # 1 1 1 1                           990x2017      822x733          3Lati- P30x2   PF         76 SX      Allum.           UNITO IN CANTIERE A SX -DX
+        # 1 1 1 1                              2 - 357x1221  1 - 819                                    TR.INF.90 SX    Allum Minima
         idx_testo = []
-        for match in re.finditer(r"^ *(?P<pos>\d{1,2}) (?P<pezzi>\d{1,2}).+\d - ", self.text, re.MULTILINE):
+        for match in re.finditer(r"(?P<pos>\d{1,2}) (?P<pezzi>\d{1,2}).+ \d{3,4}x", self.text, re.MULTILINE):
             idx_testo.append({'start': match.start(),'pos':match.group('pos'), 'pezzi':match.group('pezzi')})
         idx_testo.append({'start': len(self.text),'pos':None, 'pezzi':None})
 

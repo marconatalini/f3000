@@ -11,10 +11,12 @@ def _add_to_file(file_dati: TextIO, search: str, data_type: str, return_type: st
     if response == 'S':
         codice = input(f'Che {data_type} devo registrare? ')
         file_dati.write(f'{os.linesep}{search}:{codice}')
+        if return_type != 'int':
+            return codice
+        return int(codice)
     file_dati.close()
-    if return_type != 'int':
-        return codice
-    return int(codice)
+    return 0
+    
 
 def get_codice_cliente_by_model(search: str) -> int:
     file_codice_cliente = _open_file('codice_cliente_by_model')

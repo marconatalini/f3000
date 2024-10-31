@@ -29,7 +29,7 @@ class CampesatoSerramento(Serramento):
         print(f'trovato {codice}')
         if '2V' in descrizione:
             self.rif_pos = 'MODIFICARE!'
-        return codice
+        return int(codice)
                 
     def get_tabella_tecnica(self, system: str, type: int) -> int:
         tab_tec = 500
@@ -41,7 +41,9 @@ class CampesatoSerramento(Serramento):
         match (type):
             case 801: #bilico
                 tab_tec = 402
-            case 901,912:
+            case 901,902:
+                tab_tec = 221
+            case 911,912:
                 tab_tec = 231
         return tab_tec
 

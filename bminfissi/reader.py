@@ -73,6 +73,7 @@ class BMinfissiReader(ReaderInterface):
         return 2642
     
     def lista_text_posizioni(self) -> list[dict]:
+        #   n. 1            1460        x    1600         ante 1  wasistas
         #             2                          3                       1.320                        300                             CF
         idx_testo = []
         for match in re.finditer(r"^\s*.* (?P<pos>\d{1,2})\s+(?P<pezzi>\d{1,2})\s+(?P<base>\S{2,5})\s+(?P<altezza>\S{2,5})\s+(?P<ante>\S+)\s*(?P<note>\S*)$", self.text, re.MULTILINE):

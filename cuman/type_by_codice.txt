@@ -1,0 +1,6 @@
+codice:type
+finestra 1 anta:100
+portafinestra 1 anta:130
+bilico:801
+finestra 2 ante:200
+portafinestra 2 ante:230
