@@ -1,0 +1,16 @@
+codice:type
+Porta finestra I anta, soglia, zoccolo A070.071 X 2:130
+Finestra II ante:200
+Finestra II ante:200
+Finestra I anta:100
+Porta finestra II ante, soglia. zoccolo A070.071:230
+Porta finestra II ante, soglia, zoccolo A070.071 X 2:230
+Finestra I anta, telaio rivestito con A085.188:100
+Finestra II ante, telaio rivestito con A 060.188, sotto:200
+Finestra I anta , telaio rivestito con A085.188:100
+Porta Finestra I anta yale, soglia, zoccolo A070.071 X 2:136
+Porta finestra II ante, parafreddo, zoccolo il più simile:250
+Porta finestra yale II ante asimmetriche, soglia, zocvcolo:236
+Porta finestra yale I anta, soglia, zoccolo A070.071 X 2:136
+Porta finestra yale II ante, soglia, zoccolo A070.071 X 2:236
+Finestra II ante, piattina da 50 X 2 su tre lati:200

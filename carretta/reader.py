@@ -75,7 +75,7 @@ class CarrettaReader(ReaderInterface):
     @property
     def riferimento(self) -> int:
         #ORDINE DI ACQUISTO A 2400656
-        return re.search(r"^ORDINE DI ACQUISTO (?P<rif>A \S+)$", self.text, re.MULTILINE).group('rif')
+        return re.search(r"^ORDINE DI ACQUISTO (?P<rif>A[ _]*\S+)$", self.text, re.MULTILINE).group('rif')
             
     @property
     def colore(self) -> str:
@@ -92,8 +92,9 @@ class CarrettaReader(ReaderInterface):
     
     def lista_text_posizioni(self) -> list[dict]:
         #O 2400277 002    MODULOR T75 FINESTRA 2A-DX-A/R                  1      PZ   RAL 8016 OPACO LISCIO      PIATTO 30X2mm           1270       1245       614       1180       474      1040      LU          B
+        #O 2400314 018    MODULOR T75 FINESTRA 2A-DX-A/R                  1      PZ   RAL 9010 OPACO LISCIO      PIATTO 30X2mm            790      1650        374      1585       234      1445      FM
         idx_testo = []
-        for match in re.finditer(r"O *\d+ *(?P<rif_pos>\d{3})  +(?P<descrizione>.+\b)  +(?P<pezzi>\d{1,3})  +PZ  +(?P<colore>.+)  +(?P<coprifilo>.*)  +(?P<base>\d{2,4})  +(?P<altezza>\d{2,4})   +(?P<m3>\d{2,4})   +(?P<m4>\d{2,4})   +(?P<la>\d{2,4})   +(?P<ha>\d{2,4})  +(?P<posa>\S{2})  +\S$", self.text, re.MULTILINE):
+        for match in re.finditer(r"O *\d+ *(?P<rif_pos>\d{3}) \s+(?P<descrizione>.+\b) \s+(?P<pezzi>\d{1,3})\s+PZ\s+(?P<colore>.+) \s+(?P<coprifilo>.*) \s+(?P<base>\d{2,4}) \s+(?P<altezza>\d{2,4}) \s+(?P<m3>\d{2,4}) \s+(?P<m4>\d{2,4}) \s+(?P<la>\d{2,4}) \s+(?P<ha>\d{2,4}) \s+(?P<posa>\S{2})", self.text, re.MULTILINE):
             idx_testo.append({'start'   : match.start(),
                               'rif_pos'     :match.group('rif_pos'), 
                               'descrizione'     :match.group('descrizione'), 

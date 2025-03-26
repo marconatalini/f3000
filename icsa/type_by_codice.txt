@@ -1,0 +1,61 @@
+codice:type
+Porta finestra I anta, soglia, zoccolo A070.071 X 2:130
+Finestra II ante:200
+Finestra II ante:200
+Finestra I anta:100
+Porta finestra II ante, soglia. zoccolo A070.071:230
+F1:100
+F2:200
+F2:200
+PF2 + 1 zoccolo:230
+Uso ingresso a 1 anta + 1 zoccolo:136
+PF2 + 1 zoccolo:230
+F1:100
+Wasistas:100
+PF2 (NO Zoccolo):230
+F1:100
+PF1 (NO Zoccolo):130
+PF2 (NO ZOCCOLO):230
+F1:100
+Fisso:90
+Fisso:90
+PF1 + 1 Zoccolo:130
+HS + 1 Zoccolo:901
+PF2 + 1 zoccolo + 1 traverso H 950 mm:235
+PF1 + 1 zoccolo + 1 traverso H 950 mm:135
+PF1 no zoccolo:130
+PF1 + 1 zoccolo:130PF2 + 1 ZOCCOLO + 1 TRAV. CENTRALE:235PF2 (NO ZOCCOLO) + 1 traverso H 1000:235PF1 (NO ZOCCOLO) + 1 traverso H 1000:135PF1:130
+PF1:130
+PF2:230
+PF2 + 1 zoccolo + 1 traverso H 1000:235
+PF1 + 1 zoccolo + 1 traverso H 1000:135
+Finestra 3 ante:300
+Porta finestra 1 anta + 1 zoccolo:130
+Porta finestra 2 ante + 1 zoccolo:230
+Finestra 2 ante:200
+Finestra 1 anta:100
+PF2 + 1 ZOCCOLO:230
+PF1 + 1 ZOCCOLO INGRESSO YALE PAG. B11:136
+Finestra 4 ante:400
+PF1 + 1 zoccolo:130
+PF2 asimmetrica (anta principale da mm 950) + 1 zoccolo:230
+Uso ingresso con pannello cieco liscio:136
+PF2 (1 Zoccolo):230
+Uso Ingresso 1 bat. con Pannello Ametista 6.0:190
+PF2 + 1 Zoccolo:230
+Porta finestra 2 ante – no zoccoli:230
+Porta finestra 1 anta – no zoccoli:130
+PF2 (no zoccolo):230
+PF1 (no zoccolo):130
+Finestra 1 anta wasistas:100
+Porta finestra 1 anta  + 1 zoccolo:130
+Uso ingresso  1 anta  + 1 zoccolo:136
+Scorrevole complanare a due ante (1 fisso + 1 scorrevole):221
+Elemento composto da::90
+Elemento composto da::90
+Bilico:801
+PF2 Senza Zoccolo:230
+PF3 Senza Zoccolo:330
+PF1 Senza Zoccolo:130
+PF2 + 1 ZOCCOLO + 1 CENTRALE + BUGNE RIQUADRO INFERIORE:235
+PF1 USO INGRESSO YALE + 1 ZOCCOLO + 1 CENTRALE + 1 MONTANTE CENTRALE + 2 BUGNE RIQUADRI INF.:137

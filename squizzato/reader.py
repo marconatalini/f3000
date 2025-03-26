@@ -6,7 +6,7 @@ from .data import get_type_by_codice
 
 
 @dataclass
-class CumanSerramento(Serramento):
+class SquizzatoSerramento(Serramento):
     
     def __init__(self, text: str) -> None:
         self.text = text
@@ -15,27 +15,23 @@ class CumanSerramento(Serramento):
     def parse_info(self) -> None:
         ...
 
-    def get_type(self, descrizione: str) -> int:
-        return get_type_by_codice(descrizione.strip())
-            
-    def get_tabella_tecnica(self) -> int:
-        match self.type:
-            case 901 | 902:
-                return 222
-            case 911 | 912:
-                return 231
+    def get_type(self) -> int:
+        type: int = 100
+        if self.larghezza > 1000:
+            type = 200
+        if self.larghezza > 1800:
+            type = 300
+        if self.altezza > 2000:
+            type += 30
+        return type            
 
-        return 34 #ET113 JTN86
-    
-    def get_altezza(self) -> int:
-        if self.type in [90,100,200,300]:
-            return int(self.altezza) + 40
-        return self.altezza
-
-class CumanReader(ReaderInterface):
+class SquizzatoReader(ReaderInterface):
+    sistema: str = ""
+    tabella_tecnica: int = 122
 
     def __init__(self, clipboard: str, debug: bool = False) -> None:
         self.text = clipboard
+        self.sistema = input("Sistema? Legno, Alu, Alu parziale?").strip()
         if debug:
             self.get_all_text()
         
@@ -44,26 +40,26 @@ class CumanReader(ReaderInterface):
 
     @property
     def riferimento(self) -> int:
-        return " "
+        return ""
             
     @property
     def colore(self) -> str:
-        return 52 #RAL STD
+        return 72 #KIT + RAL STD
 
     @property
     def cliente(self) -> int:
-        return 610
+        return 532
     
     def lista_text_posizioni(self) -> list[dict]:
-        # n.5 da 1150x1800 finestra 1 anta
+        # N° 02		  880 X 2290	Porta finestra I anta, soglia, zoccolo A070.071 X 2
+        # pz 2     110x145    2 a
         idx_testo = []
-        for match in re.finditer(r"\.(?P<pezzi>\d{1,2}) da (?P<base>\d{3,4})x(?P<altezza>\d{3,4}) (?P<descrizione>.+)$", self.text, re.MULTILINE):
+        for match in re.finditer(r"pz\s*(?P<pezzi>\d{1,2})\s+(?P<base>\d{2,4})\s*[X|x]*\s*(?P<altezza>\d{2,4}).*$", self.text, re.MULTILINE):
             idx_testo.append({
                 'start': match.start(),
                 'pezzi':match.group('pezzi'),
                 'base':match.group('base'),
                 'altezza':match.group('altezza'),
-                'descrizione':match.group('descrizione').strip(),
                 })
         idx_testo.append({'start': len(self.text),'pos':None, 'pezzi':None})
 
@@ -77,15 +73,16 @@ class CumanReader(ReaderInterface):
 
         for i in range(len(posizioni)-1):
             pos_text = self.text[posizioni[i]['start'] : posizioni[i+1]['start']]
-            serramento = CumanSerramento(pos_text)
+            serramento = SquizzatoSerramento(pos_text)
             serramento.rif_pos = i+1
             serramento.pezzi = posizioni[i]['pezzi']
-            serramento.type = serramento.get_type(posizioni[i]['descrizione'])
-            serramento.larghezza = posizioni[i]['base']
-            serramento.altezza = posizioni[i]['altezza']
-            serramento.altezza = serramento.get_altezza()
-            serramento.tabella_tecnica = serramento.get_tabella_tecnica()
+            serramento.larghezza = int(posizioni[i]['base'])*10
+            serramento.altezza = int(posizioni[i]['altezza'])*10
+            serramento.type = serramento.get_type()
+            serramento.tabella_tecnica = self.tabella_tecnica
             serramento.colore = self.colore
             serramenti.append(serramento)
         
         return serramenti
+
+

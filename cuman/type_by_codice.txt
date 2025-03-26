@@ -4,3 +4,35 @@ portafinestra 1 anta:130
 bilico:801
 finestra 2 ante:200
 portafinestra 2 ante:230
+portafinestra ingresso con spalle maggiorate per alloggio serratura:136
+finestra ad 1 anta:100
+portefinestre ad 1 anta:130
+finestre ad 1 anta:100
+portafinestra ingresso ad 1 anta:141
+hs imago a 2 ante:911
+portafinestra a 2 ante:230
+vasistas:100
+finestra a 2 ante:200
+portafinestra ad 1 anta:130
+fisso:90
+hs imago:911
+portafinestra ad 1 anta con spalle maggiorate:136
+fissi:90
+vasistas 1 anta:100
+alzante scorrevole mod. Imago:911
+finestre a 2 ante:200rivestimento portoncino mod. SMERALDO 1.9 con cassa maggiorata:191- fisso:90
+portafinestra d’ingresso 1 anta:136
+portafinestra 1 anta con sopraluce fisso superiore da circa 970x360:133
+– portafinestra ad 1 anta:130
+– finestra ad 1 anta:100
+– bilico:801
+– rivestimento portoncino come mod. AMBRA 1.0:190
+– portafinestra a 2 ante:230
+– finestra a 2 ante:200
+– finestre a 2 ante:200
+– portafinestra ingresso secondario:136
+– fisso:90
+- fisso:90
+– alzante scorrevole mod. imago:911
+– portafinestra ingresso con spalle maggiorate:136
+– vasistas:100

@@ -16,6 +16,7 @@ class Offset:
 class FinnovaSerramento(Serramento):
     is_minima: bool = False
     is_hs_minima: bool = False
+    model: str = ''
     
     def __init__(self, text: str) -> None:
         self.text = text
@@ -26,6 +27,7 @@ class FinnovaSerramento(Serramento):
         self.get_offset()
         self.is_minima = bool(re.search(r"Allum +Minima", self.text, re.MULTILINE))
         self.is_hs_minima = bool(re.search(r"HS-Minima", self.text, re.MULTILINE))
+        self.model = re.search("(STONDAT|SQUADR|PARI|BAROCCO|RETT.90|Minima)", self.text).group(0)
 
     def get_type(self, rif_pos: str, last_type: int) -> int:
         type = input(f'Tipologia pos.{rif_pos}? ')
@@ -44,11 +46,16 @@ class FinnovaSerramento(Serramento):
     
     def get_misure_serramento(self, type: int) -> tuple[int,int]:
         larghezza, altezza = 0,0
-        match = re.search(r"(?P<larghezza>\d{3,4})x *(?P<altezza>\d{3,4})", self.text, re.MULTILINE)
+        match = re.search(r"(?P<larghezza>\d{3,4})x *(?P<altezza>\d{3,4})*", self.text, re.MULTILINE)
+        if match.group('larghezza'):
+            larghezza = self.offset.sx + int(match.group('larghezza')) + self.offset.dx
+        if match.group('altezza'):
+            altezza = self.offset.sup + int(match.group('altezza')) + self.offset.inf
+        else:
+            altezza = 9999
+
         # print(self.offset.sx , int(match.group('larghezza')) , self.offset.dx)
         # print(self.offset.sup , int(match.group('altezza')) , self.offset.inf)
-        larghezza = self.offset.sx + int(match.group('larghezza')) + self.offset.dx
-        altezza = self.offset.sup + int(match.group('altezza')) + self.offset.inf
     
         if self.is_minima:
             sormonto_ch = 102
@@ -56,6 +63,9 @@ class FinnovaSerramento(Serramento):
             is_porta = 40 > (type - (type // 100)*100) > 29
             larghezza = self.offset.sx + int(match.group('larghezza')) * n_ante + self.offset.dx + sormonto_ch * (n_ante -1) + 4
             altezza = self.offset.sup + int(match.group('altezza')) + self.offset.inf + 4 + 66 * (is_porta)
+
+            if type == 90:
+                larghezza = self.offset.sx + int(match.group('larghezza')) + self.offset.dx + 4
             return (larghezza, altezza)
         
         if type == 90 and not self.is_minima: #FIX
@@ -69,6 +79,8 @@ class FinnovaSerramento(Serramento):
             return 483
         if self.type in [911,912] and self.is_hs_minima:
             return 231
+        if self.type in [901,902,907,908]:
+            return 206
         pattern = get_telaio_pattern_by_model(model)
         match_telai = re.findall(pattern, self.text, re.MULTILINE)
         telaio = max(match_telai, key=match_telai.count)
@@ -90,13 +102,13 @@ class FinnovaReader(ReaderInterface):
 
     def get_number_pages(self, total_pages: int) -> int:
         number_pages_to_import = ''
-        while number_pages_to_import.isnumeric() == False:
+        while not number_pages_to_import.isnumeric():
             number_pages_to_import = input('Quante pagine vuoi importare?')
         return min(total_pages, int(number_pages_to_import))
 
 
     def get_all_text(self):
-        open('debug_text.txt', 'w').write(self.text)
+        open('debug_text.txt', 'w', encoding="utf-8").write(self.text)
 
     @property
     def riferimento(self) -> int:
@@ -111,15 +123,15 @@ class FinnovaReader(ReaderInterface):
         return get_codice_colore(descrizione_colore)
     
     def system(self) -> str:
-        return re.search(r"(A.FIN LA |A.FIN LA88 |A.FIX LA |A.FIX LA88 |A.BIL LA |A.SCOR LA |A.SCOR LA88 |A.FIN 68ZERO)", self.text).group(0)
+        return re.search(r"(A.FIN LA |A.FIN LA88|A.FIX LA |A.FIX LA88 |A.BIL LA |A.SCOR LA |A.SCOR LA88 |A.FIN 68ZERO)", self.text).group(0)
     
-    def model(self) -> str:
+    def model_first_pos(self) -> str:
         return re.search("(STONDAT|SQUADR|PARI|BAROCCO|RETT.90|Minima)", self.text).group(0)
 
     @property
     def cliente(self) -> int:
         system = self.system()
-        model = self.model()
+        model = self.model_first_pos()
         cliente = get_codice_cliente_by_model(f'{system} {model}')
         return cliente
     
@@ -147,7 +159,8 @@ class FinnovaReader(ReaderInterface):
             serramento.pezzi = posizioni[i]['pezzi']
             last_type = serramento.type = serramento.get_type(serramento.rif_pos, last_type)
             serramento.larghezza, serramento.altezza = serramento.get_misure_serramento(last_type)
-            serramento.tabella_tecnica = serramento.get_tabella_tecnica(self.system(), self.model())
+            serramento.tabella_tecnica = serramento.get_tabella_tecnica(self.system(), serramento.model)
+            serramento.update_altezza()
             serramento.colore = self.colore
             serramenti.append(serramento)
         

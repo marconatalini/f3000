@@ -41,9 +41,9 @@ class CampesatoSerramento(Serramento):
         match (type):
             case 801: #bilico
                 tab_tec = 402
-            case 901,902:
+            case 901 | 902:
                 tab_tec = 221
-            case 911,912:
+            case 911 | 912:
                 tab_tec = 231
         return tab_tec
 

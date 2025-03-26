@@ -30,7 +30,7 @@ class ReaderInterface(ABC):
 
     @property
     def commento(self) -> str:
-        return f'Ordine importato'
+        return 'Dati importati'
 
     
     @property

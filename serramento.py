@@ -13,7 +13,7 @@ class Serramento:
     type: int = 90
     colore: int = 51
 
-    def get_extras(self) -> list[str]:
+    def get_extras(self) -> str:
         '''
             "T",[N.Riga TabTec],[Valore]
             "T",....
@@ -24,6 +24,11 @@ class Serramento:
         if len(extra):
             extra.append('\n')
         return '\n'.join(extra)
+    
+    def update_altezza(self) -> None:
+        match self.type:
+            case 100| 200| 300| 90 if self.tabella_tecnica < 201:
+                self.altezza += 40
     
     def f3000_txt(self, idx_pos: int = 1) -> str:
         return "P,{},{rif_pos},{larghezza},{altezza},{pezzi},{tabella_tecnica},{type},{colore};\n{}".format(idx_pos, self.get_extras(), **self.__dict__)
